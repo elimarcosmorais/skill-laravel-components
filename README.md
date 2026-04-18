@@ -1,4 +1,4 @@
-# laravel-components (v1.0.0)
+# laravel-components (v1.0.1)
 
 Skill para [Claude Code](https://docs.anthropic.com/en/docs/claude-code) que cria novos componentes e refatora componentes existentes JavaScript + Blade (Laravel) seguindo padrões consistentes de organização, encapsulamento e nomenclatura.
 

@@ -45,11 +45,13 @@ Antes de criar ou alterar qualquer arquivo, o agente deve:
 Só após aprovação do usuário o agente prossegue com as fases de implementação.
 
 ### Fase 1 — Análise
+
 Identificar se é criação de novo componente ou refatoração de existente. Para refatoração, receber
 o código JS + Blade existente do usuário. Para criação, receber a descrição e features do novo
 componente. Em ambos os casos, confirmar o nome do componente e suas features.
 
 ### Fase 2 — Implementação JS (carregar sob demanda)
+
 Consultar **`references/js-structure.md`** para a estrutura completa de classes, encapsulamento,
 bootstrap e convenções de código (inclui features ES2025).
 
@@ -61,15 +63,18 @@ configuração via `JSON.parse`, consultar **`references/phpstorm-jsdoc.md`** pa
 `@typedef`, `@type`, instalação de `@types/*` e supressão de avisos da IDE.
 
 ### Fase 3 — Implementação Blade (carregar sob demanda)
+
 Consultar **`references/blade-structure.md`** para o padrão de templates Blade, @props,
 @php centralizado e boas práticas.
 
 ### Fase 4 — Documentação (carregar sob demanda)
+
 Consultar **`references/component-doc-template.md`** para gerar a documentação .md
 do componente, otimizada para agentes AI (Claude Code). O arquivo deve ser salvo em
 **`.claude/docs/components/{nome-kebab-case}.md`** dentro do projeto.
 
 ### Fase 5 — Registro no loader.js
+
 Se o componente possui arquivo JavaScript, declarar o módulo no arquivo `resources/js/loader.js`,
 adicionando a entrada no objeto `LAZY_MODULES` com o seletor `COMPONENT_SELECTOR` do componente:
 
@@ -82,6 +87,7 @@ Consultar o conteúdo atual do `loader.js` para agrupar corretamente o novo mód
 demais da mesma categoria (Inputs, Modals, etc.).
 
 ### Fase 6 — Validação e Entrega
+
 Validar contra o checklist final. Entregar os arquivos juntos (JS + Blade + documentação .md).
 Para referência completa de um componente canônico, consultar
 **`references/password-field-example.md`**.
@@ -93,11 +99,13 @@ Para referência completa de um componente canônico, consultar
 Estas regras se aplicam a TODOS os componentes — consulte os references para detalhes.
 
 **Geral:**
+
 1. **Plano de trabalho obrigatório** — apresentar o plano e aguardar aprovação do usuário antes de criar ou alterar qualquer arquivo
 2. **Comentários em português do Brasil** — todos os DocBlocks, comentários de classe, método e função devem ser escritos em português do Brasil
 3. **Registro no `loader.js`** — todo componente com arquivo JS deve ser declarado em `resources/js/loader.js` no objeto `LAZY_MODULES`
 
 **JavaScript (ES2025):**
+
 1. **Classe ES2025** encapsulando tudo (sem funções soltas no escopo global)
 2. **Private fields `#`** para todas as propriedades DOM, `#init()`, `#setup*` e auxiliares
 3. **Apenas `this.root` público** (e constructor por natureza)
@@ -115,6 +123,7 @@ Estas regras se aplicam a TODOS os componentes — consulte os references para d
 14. **`Promise.try()`** — preferir sobre `Promise.resolve().then(fn)` para wrapping sync/async uniforme
 
 **Blade (Laravel 13.x):**
+
 1. **`@php` único** no topo (após `@props`) — nunca blocos espalhados
 2. **`@class`** para classes condicionais
 3. **Data attributes com nome completo**: `data-{nome-arquivo}-root` no root, `data-{nome-arquivo}-{atributo}` nos internos
@@ -122,6 +131,7 @@ Estas regras se aplicam a TODOS os componentes — consulte os references para d
 5. **`<x-icon>` com data attributes**: envolver em `<span>` quando JS precisa encontrá-los
 
 **Título do componente:**
+
 - Sempre separar palavras no cabeçalho: `Password Field Component` (nunca `PasswordField Component`)
 - A classe JS permanece PascalCase: `class PasswordField {}`
 
@@ -129,25 +139,27 @@ Estas regras se aplicam a TODOS os componentes — consulte os references para d
 
 ## Referências — Quando Carregar
 
-| Arquivo | Conteúdo | Carregar Quando |
-|---|---|---|
-| `references/js-structure.md` | Classe, #init, #setup*, bootstrap, ES2025, convenções, loader.js | Fase 2 (implementação JS) |
-| `references/blade-structure.md` | @props, @php, @class, boas práticas (Laravel 13.x) | Fase 3 (implementação Blade) |
-| `references/state-data-attributes.md` | Padrão Estado via Data Attributes | Fase 2, quando houver estados multi-valor |
-| `references/component-doc-template.md` | Template de documentação .md para agentes AI | Fase 4 (documentação) |
-| `references/password-field-example.md` | Componente canônico completo (JS + Blade) | Fase 6 ou quando precisar de referência |
-| `references/phpstorm-jsdoc.md` | `@typedef`, `@type`, `@types/*`, `noinspection` | Fase 2, quando houver APIs externas ou avisos da IDE |
+| Arquivo                                | Conteúdo                                                          | Carregar Quando                                      |
+| -------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------- |
+| `references/js-structure.md`           | Classe, #init, #setup\*, bootstrap, ES2025, convenções, loader.js | Fase 2 (implementação JS)                            |
+| `references/blade-structure.md`        | @props, @php, @class, boas práticas (Laravel 13.x)                | Fase 3 (implementação Blade)                         |
+| `references/state-data-attributes.md`  | Padrão Estado via Data Attributes                                 | Fase 2, quando houver estados multi-valor            |
+| `references/component-doc-template.md` | Template de documentação .md para agentes AI                      | Fase 4 (documentação)                                |
+| `references/password-field-example.md` | Componente canônico completo (JS + Blade)                         | Fase 6 ou quando precisar de referência              |
+| `references/phpstorm-jsdoc.md`         | `@typedef`, `@type`, `@types/*`, `noinspection`                   | Fase 2, quando houver APIs externas ou avisos da IDE |
 
 ---
 
 ## Checklist Final
 
 **Geral:**
+
 - [ ] Plano de trabalho apresentado e aprovado pelo usuário antes de qualquer implementação
 - [ ] Todos os comentários (DocBlocks, classes, métodos, funções) em português do Brasil
 - [ ] Componente JS declarado em `resources/js/loader.js` (se houver arquivo JS)
 
 **JavaScript (ES2025):**
+
 - [ ] Classe ES2025 com campos privados `#` declarados no topo
 - [ ] `COMPONENT_SELECTOR` e `initialized` como constantes no topo
 - [ ] Constructor com `root.querySelector` (nunca `document.querySelector`)
@@ -166,8 +178,10 @@ Estas regras se aplicam a TODOS os componentes — consulte os references para d
 - [ ] Iterator Helpers usados quando aplicável (DOM NodeLists, coleções)
 - [ ] `RegExp.escape()` em regex construídos a partir de input dinâmico
 - [ ] `Promise.try()` preferido sobre wrapping manual de sync em Promise
+- [ ] Scroll travado via `window.ScrollLock.lock/unlock` — nunca manipular `document.body.overflow/paddingRight` diretamente
 
 **Blade (Laravel 13.x):**
+
 - [ ] Bloco `@php` único no topo (após `@props`)
 - [ ] Variáveis de conveniência para condições repetidas
 - [ ] `@class` para classes condicionais
@@ -176,5 +190,6 @@ Estas regras se aplicam a TODOS os componentes — consulte os references para d
 - [ ] `<x-icon>` com data attributes envolvidos em `<span>` quando JS precisa encontrá-los
 
 **Documentação:**
+
 - [ ] Arquivo .md gerado com nome kebab-case do componente dentro de `.claude/docs/components/`
 - [ ] Segue o template de `references/component-doc-template.md`

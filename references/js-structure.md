@@ -67,7 +67,7 @@ métodos, funções e comentários inline. Isso inclui descrições de `@param`,
 ## Constantes Globais
 
 ```javascript
-const COMPONENT_SELECTOR = '[data-nome-do-componente-root]';
+const COMPONENT_SELECTOR = "[data-nome-do-componente-root]";
 const initialized = new WeakSet();
 ```
 
@@ -86,15 +86,15 @@ via `root` garante que os seletores não colidam entre componentes.
 
 ```javascript
 class NomeDoComponente {
-    #input;
-    #button;
+  #input;
+  #button;
 
-    constructor(root) {
-        this.root = root;
-        this.#input = root.querySelector('[data-nome-do-componente-input]');
-        this.#button = root.querySelector('[data-nome-do-componente-button]');
-        this.#init();
-    }
+  constructor(root) {
+    this.root = root;
+    this.#input = root.querySelector("[data-nome-do-componente-input]");
+    this.#button = root.querySelector("[data-nome-do-componente-button]");
+    this.#init();
+  }
 }
 ```
 
@@ -105,35 +105,36 @@ Isso garante encapsulamento real (não apenas convenção).
 
 ```javascript
 class NomeDoComponente {
-    // Campos privados — declarados no topo da classe
-    #input;
-    #button;
-    #meterBars;
+  // Campos privados — declarados no topo da classe
+  #input;
+  #button;
+  #meterBars;
 
-    constructor(root) {
-        this.root = root;  // root permanece público
-        this.#input = root.querySelector('[data-nome-do-componente-input]');
-        this.#button = root.querySelector('[data-nome-do-componente-button]');
-        this.#init();
-    }
+  constructor(root) {
+    this.root = root; // root permanece público
+    this.#input = root.querySelector("[data-nome-do-componente-input]");
+    this.#button = root.querySelector("[data-nome-do-componente-button]");
+    this.#init();
+  }
 
-    #init() {
-        this.#setupFeatureA();
-        this.#setupFeatureB();
-    }
+  #init() {
+    this.#setupFeatureA();
+    this.#setupFeatureB();
+  }
 
-    #setupFeatureA() {
-        if (!this.#input || !this.#button) return;
-        this.#button.addEventListener('click', () => this.#handleAction());
-    }
+  #setupFeatureA() {
+    if (!this.#input || !this.#button) return;
+    this.#button.addEventListener("click", () => this.#handleAction());
+  }
 
-    #handleAction() {
-        // lógica interna
-    }
+  #handleAction() {
+    // lógica interna
+  }
 }
 ```
 
 **O que deve ser `#` privado:**
+
 - Todas as propriedades mapeadas do DOM (`#input`, `#button`, `#box`, etc.)
 - O método `#init()` — só é chamado pelo constructor
 - Todos os métodos `#setup*` — só são chamados pelo `#init()`
@@ -141,6 +142,7 @@ class NomeDoComponente {
 - Propriedades derivadas internas (`#meterBars`, `#isVisible`, etc.)
 
 **O que permanece público:**
+
 - `this.root` — o elemento raiz (útil para referência externa)
 - O `constructor` (sempre público por natureza)
 
@@ -158,7 +160,7 @@ Chama todos os `#setup*` sem lógica condicional — cada setup cuida da própri
 }
 ```
 
-### Métodos #setup* e Auxiliares
+### Métodos #setup\* e Auxiliares
 
 Cada feature é isolada em um bloco com separador de 75 caracteres `=`:
 
@@ -178,6 +180,7 @@ Cada feature é isolada em um bloco com separador de 75 caracteres `=`:
 ```
 
 Regras importantes:
+
 - O `#setup*` sempre inicia com guard clause validando elementos necessários
 - Event listeners são registrados apenas dentro dos `#setup*`, nunca em auxiliares
 - Use arrow functions nos listeners para preservar `this`
@@ -202,31 +205,28 @@ Bloco idêntico em todos os componentes — mude apenas o nome da função mount
 // =============================================================================
 
 function mountNomeDoComponente() {
-    document.querySelectorAll(COMPONENT_SELECTOR).forEach((root) => {
-        if (initialized.has(root)) return;
-        initialized.add(root);
-        new NomeDoComponente(root);
-    });
+  document.querySelectorAll(COMPONENT_SELECTOR).forEach((root) => {
+    if (initialized.has(root)) return;
+    initialized.add(root);
+    new NomeDoComponente(root);
+  });
 }
 
 const observer = new MutationObserver((mutations) => {
-    const hasNewComponent = mutations.some((mutation) =>
-        Array.from(mutation.addedNodes).some(
-            (node) =>
-                node.nodeType === 1 &&
-                (node.matches?.(COMPONENT_SELECTOR) ||
-                    node.querySelector?.(COMPONENT_SELECTOR)),
-        ),
-    );
-    if (hasNewComponent) mountNomeDoComponente();
+  const hasNewComponent = mutations.some((mutation) =>
+    Array.from(mutation.addedNodes).some(
+      (node) => node.nodeType === 1 && (node.matches?.(COMPONENT_SELECTOR) || node.querySelector?.(COMPONENT_SELECTOR)),
+    ),
+  );
+  if (hasNewComponent) mountNomeDoComponente();
 });
 
 observer.observe(document.body, { childList: true, subtree: true });
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', mountNomeDoComponente);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", mountNomeDoComponente);
 } else {
-    mountNomeDoComponente();
+  mountNomeDoComponente();
 }
 ```
 
@@ -249,10 +249,14 @@ quanto nos elementos internos. Isso elimina a necessidade de controle de prefixo
 - **Internos** — `data-{nome-arquivo}-{nome-do-atributo}`
 
 ```html
-<div data-password-field-root>                          <!-- root -->
-    <input data-password-field-input>                   <!-- nome completo -->
-    <button data-password-field-copy>Copiar</button>    <!-- nome completo -->
-    <button data-password-field-generate>Gerar</button> <!-- nome completo -->
+<div data-password-field-root>
+  <!-- root -->
+  <input data-password-field-input />
+  <!-- nome completo -->
+  <button data-password-field-copy>Copiar</button>
+  <!-- nome completo -->
+  <button data-password-field-generate>Gerar</button>
+  <!-- nome completo -->
 </div>
 ```
 
@@ -312,6 +316,7 @@ encadear operações de filtragem/transformação. Isso evita conversões desnec
 ```
 
 **Quando NÃO usar:**
+
 - Iterações simples com `forEach` — `querySelectorAll().forEach()` já é eficiente
 - Quando não há encadeamento (filtro único em lista pequena) — spread é mais legível
 - No `MutationObserver` do bootstrap — manter `Array.from()` por clareza e compatibilidade
@@ -389,17 +394,16 @@ objeto `LAZY_MODULES`. O seletor é o `COMPONENT_SELECTOR` do componente.
 
 ```javascript
 const LAZY_MODULES = {
-    // Inputs
-    "[data-password-field-root]": () =>
-        import("./components/inputs/password-field"),
+  // Inputs
+  "[data-password-field-root]": () => import("./components/inputs/password-field"),
 
-    // Novo componente adicionado — agrupar por categoria
-    "[data-nome-do-componente-root]": () =>
-        import("./components/{categoria}/{nome-do-arquivo}"),
+  // Novo componente adicionado — agrupar por categoria
+  "[data-nome-do-componente-root]": () => import("./components/{categoria}/{nome-do-arquivo}"),
 };
 ```
 
 **Regras:**
+
 - Agrupar entradas por categoria com comentário (ex: `// Inputs`, `// Modals`, `// Charts`)
 - O seletor deve corresponder exatamente ao `COMPONENT_SELECTOR` definido no arquivo JS
 - O caminho de import é relativo ao `loader.js`, sem extensão `.js`
@@ -409,17 +413,89 @@ const LAZY_MODULES = {
 
 ## Convenções de Código
 
-| Tipo | Convenção | Exemplo |
-|---|---|---|
-| Classe | PascalCase | `PasswordField` |
-| Campo privado | `#` + camelCase | `#input`, `#meterBars` |
-| Método privado setup | `#` + camelCase + `setup` | `#setupToggle` |
-| Método privado auxiliar | `#` + camelCase descritivo | `#calculateStrength` |
-| Propriedade pública | camelCase | `this.root` |
-| Função mount | camelCase + `mount` | `mountPasswordField` |
-| Constante global | UPPER_SNAKE_CASE | `COMPONENT_SELECTOR` |
+| Tipo                    | Convenção                  | Exemplo                |
+| ----------------------- | -------------------------- | ---------------------- |
+| Classe                  | PascalCase                 | `PasswordField`        |
+| Campo privado           | `#` + camelCase            | `#input`, `#meterBars` |
+| Método privado setup    | `#` + camelCase + `setup`  | `#setupToggle`         |
+| Método privado auxiliar | `#` + camelCase descritivo | `#calculateStrength`   |
+| Propriedade pública     | camelCase                  | `this.root`            |
+| Função mount            | camelCase + `mount`        | `mountPasswordField`   |
+| Constante global        | UPPER_SNAKE_CASE           | `COMPONENT_SELECTOR`   |
 
 Strings com aspas simples. Template literals apenas com interpolação. Trailing comma em arrays/objetos.
+
+---
+
+## Utilitários Globais
+
+### window.ScrollLock
+
+Utilitário global em `resources/js/components/util/scroll-lock.js` que gerencia o travamento
+da scrollbar com **contagem de referências**. Múltiplos componentes podem chamar `lock/unlock`
+independentemente — o `document.body` só é modificado quando o contador sai de/chega a zero,
+evitando conflitos entre overlays simultâneos (ex: modal + date-picker abertos ao mesmo tempo).
+
+**API:**
+
+```javascript
+window.ScrollLock.lock(); // incrementa contador e trava scroll (se for o primeiro)
+window.ScrollLock.unlock(); // decrementa contador e libera scroll (se for o último)
+window.ScrollLock.locked; // getter boolean — true se qualquer componente travou o scroll
+```
+
+**Regra inviolável:** Nunca manipule `document.body.overflow` ou `document.body.paddingRight`
+diretamente em componentes. Sempre delegue ao `window.ScrollLock`.
+
+**Quando usar:** Qualquer componente que precise impedir o scroll da página enquanto estiver
+aberto — modais, drawers, calendários que ultrapassam a viewport, bottom sheets, etc.
+
+**Padrão com flag de controle:**
+
+Componentes que travam o scroll condicionalmente (ex: só quando o calendário ultrapassa a
+viewport) devem usar um campo privado `#didLockScroll` para rastrear se foram eles que
+chamaram `lock()` — e só chamar `unlock()` nesse caso:
+
+```javascript
+class MeuComponente {
+  #didLockScroll = false;
+
+  #open() {
+    // trava apenas se necessário (ex: conteúdo ultrapassa viewport)
+    if (precisaTravar) {
+      window.ScrollLock.lock();
+      this.#didLockScroll = true;
+    }
+    // ...
+  }
+
+  #close() {
+    if (this.#didLockScroll) {
+      window.ScrollLock.unlock();
+      this.#didLockScroll = false;
+    }
+    // ...
+  }
+}
+```
+
+Componentes que **sempre** travam o scroll ao abrir (ex: modal) chamam `lock/unlock`
+diretamente, sem necessidade de flag:
+
+```javascript
+show() {
+    window.ScrollLock.lock();
+    // ...
+}
+
+close() {
+    window.ScrollLock.unlock();
+    // ...
+}
+```
+
+**Dependência de carregamento:** `scroll-lock.js` deve ser carregado **antes** de qualquer
+componente que o utilize. Verificar o `loader.js` ou o entry point do bundle.
 
 ---
 
