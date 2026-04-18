@@ -66,13 +66,6 @@ Copie e preencha o esqueleto abaixo ao gerar a documentação de um componente.
 
 > Omitir seção se não houver slots.
 
-## Data Attributes (JS)
-
-| Atributo | Elemento | Função |
-|---|---|---|
-| `data-{nome-arquivo}-root` | Root | Inicialização do componente |
-| `data-{nome-arquivo}-{atributo}` | {elemento} | {função} |
-
 ## Variações
 
 ### {Nome da Variação}
@@ -145,20 +138,6 @@ Copie e preencha o esqueleto abaixo ao gerar a documentação de um componente.
 | `autocomplete` | `string` | `'off'` | Valor do atributo autocomplete. |
 | `disabled` | `bool` | `false` | Desabilita o campo. |
 | `col` | `?int` | `null` | Span de coluna no grid (`md:col-span-{n}`). |
-
-## Data Attributes (JS)
-
-| Atributo | Elemento | Função |
-|---|---|---|
-| `data-password-field-root` | Root `<div>` | Inicialização do componente |
-| `data-password-field-input` | `<input>` | Campo de senha |
-| `data-password-field-box` | `<div>` | Container do campo + botões |
-| `data-password-field-generate` | `<button>` | Dispara geração de senha |
-| `data-password-field-copy` | `<button>` | Dispara cópia |
-| `data-password-field-eye` | `<div>` | Ícone olho aberto |
-| `data-password-field-eye-slash` | `<div>` | Ícone olho fechado |
-| `data-password-field-meter` | `<div>` | Container do medidor |
-| `data-password-field-meter-box` | `<div>` | Grid das barras do medidor |
 
 ## Variações
 
