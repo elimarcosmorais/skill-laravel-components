@@ -494,6 +494,27 @@ close() {
 }
 ```
 
+**Anti-padrão — nunca condicionar `unlock()` ao estado interno da stack:**
+
+```javascript
+// ❌ ERRADO — quebra a contagem de referências com múltiplas instâncias abertas
+close() {
+    this.#removeFromStack();
+    if (stack.length === 0) {        // ← não faça isso
+        window.ScrollLock.unlock();
+    }
+}
+
+// ✅ CORRETO — cada instância que chamou lock() deve chamar unlock()
+close() {
+    this.#removeFromStack();
+    window.ScrollLock.unlock();     // ScrollLock gerencia a contagem internamente
+}
+```
+
+Com 2 instâncias abertas, `count = 2`. Se `unlock()` for chamado apenas uma vez (quando a
+stack interna chega a zero), o `count` fica em 1 e os estilos do `body` nunca são removidos.
+
 **Dependência de carregamento:** `scroll-lock.js` deve ser carregado **antes** de qualquer
 componente que o utilize. Verificar o `loader.js` ou o entry point do bundle.
 
