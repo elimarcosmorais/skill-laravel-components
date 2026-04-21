@@ -179,6 +179,7 @@ Estas regras se aplicam a TODOS os componentes — consulte os references para d
 - [ ] `RegExp.escape()` em regex construídos a partir de input dinâmico
 - [ ] `Promise.try()` preferido sobre wrapping manual de sync em Promise
 - [ ] Scroll travado via `window.ScrollLock.lock/unlock` — nunca manipular `document.body.overflow/paddingRight` diretamente
+- [ ] Funções globais expostas (`window.*`) com stub de fila no `loader.js` e drenagem + `null` no componente ao carregar
 
 **Blade (Laravel 13.x):**
 

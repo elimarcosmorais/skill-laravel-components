@@ -518,6 +518,47 @@ stack interna chega a zero), o `count` fica em 1 e os estilos do `body` nunca s�
 **Dependência de carregamento:** `scroll-lock.js` deve ser carregado **antes** de qualquer
 componente que o utilize. Verificar o `loader.js` ou o entry point do bundle.
 
+### Funções Globais Expostas (`window.*`)
+
+Componentes que expõem funções globais (ex: `window.showAlert`, `window.openModal`) enfrentam
+uma **race condition** com o lazy load: se o código da página chamar a função global antes do
+módulo terminar de importar, a função ainda não existe e gera `ReferenceError`.
+
+**Causa raiz:** o `loader.js` usa `import()` dinâmico (assíncrono). Quando o `DOMContentLoaded`
+da view dispara e chama `window.showAlert(...)`, o módulo pode ainda não ter resolvido.
+
+**Solução: stub de fila no `loader.js` + drenagem no componente**
+
+No `loader.js`, antes de `loadModules()`, definir um stub que enfileira as chamadas:
+
+```javascript
+// loader.js — antes de loadModules()
+window._alertQueue = [];
+window.showAlert = (opts) => window._alertQueue.push(opts);
+```
+
+No componente, após definir a função real, drenar a fila:
+
+```javascript
+// alert.js — no final do arquivo, após definir a classe
+window.showAlert = (options) => Alert.show(options);
+window._alertQueue?.forEach((opts) => Alert.show(opts));
+window._alertQueue = null;
+```
+
+**Quando aplicar:**
+
+- Qualquer componente que defina uma função global (`window.nomeFuncao`)
+- Sempre que o componente for registrado no `LAZY_MODULES` do `loader.js`
+- Sempre que a função global puder ser chamada em `DOMContentLoaded` ou em scripts inline da view
+
+**Regras:**
+
+- A fila deve ser inicializada **no `loader.js`**, antes de `loadModules()`
+- A drenagem deve ocorrer **após** `window.nomeFuncao = ...` no componente
+- Após drenar, setar a fila como `null` (libera memória e sinaliza que o módulo carregou)
+- Nomear a fila com prefixo `_` e sufixo `Queue`: `window._alertQueue`, `window._toastQueue`
+
 ---
 
 ## Segurança
